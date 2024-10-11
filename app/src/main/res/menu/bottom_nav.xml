@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="HOME"
+        android:id="@+id/home"
+        android:icon="@drawable/vc_home"
+
+        />
+    <item android:title="PROFILE"
+        android:id="@+id/profile"
+        android:icon="@drawable/vc_account"
+        />
+</menu>
