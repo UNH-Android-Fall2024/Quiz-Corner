@@ -32,12 +32,9 @@ class ProfileFragment : Fragment() {
         val currentUser: FirebaseUser? = firebaseAuth.currentUser
         currentUser?.let {
             val userEmail = it.email
-            val userName = userEmail?.substringBefore("@") ?: "User"
+            val userName = ("Welcome," +(userEmail?.substringBefore("@") ?: "User"))
             profileNameTextView.text = userName
         }
-
-
-
 
         val fabAddQuiz: FloatingActionButton = view.findViewById(R.id.fab_add_quiz)
         fabAddQuiz.setOnClickListener {
