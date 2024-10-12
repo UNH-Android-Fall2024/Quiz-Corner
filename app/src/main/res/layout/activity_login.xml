@@ -72,6 +72,25 @@
         app:iconPadding="8dp"
         app:iconGravity="textStart"/>
 
+    <!-- Sign up if you havn't registered yet ! Sign Up Text -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp">
+
+        <TextView
+            android:id="@+id/haventregisteredText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up if you haven't registered yet !"
+            android:textColor="@color/peach"
+            android:textSize="14sp"/>
+
+
+    </LinearLayout>
+
 
     </LinearLayout>
 
