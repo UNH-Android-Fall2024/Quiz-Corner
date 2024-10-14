@@ -29,7 +29,7 @@
 
     <!-- Logo or app icon -->
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/startquizLogo"
         android:layout_width="304dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
@@ -40,7 +40,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to Quiz App !"
+        android:text="Welcome to the         Quiz App !"
         android:textStyle="italic"
         android:textSize="35sp"
         android:layout_gravity="center"
@@ -52,7 +52,7 @@
 
         <!-- Start Quiz Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/signinButton"
+        android:id="@+id/navigateQuizButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Start a Quiz"
