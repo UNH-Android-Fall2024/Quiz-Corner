@@ -31,7 +31,7 @@ class ProfileFragment : Fragment() {
         val profileNameTextView: TextView = view.findViewById(R.id.profile_name)
         val currentUser: FirebaseUser? = firebaseAuth.currentUser
 
-        // User name before @  is displaed. 
+        // User name before @  is displaed.
         currentUser?.let {
             val userEmail = it.email
             val userName = ("Welcome," +(userEmail?.substringBefore("@") ?: "User"))

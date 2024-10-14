@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="@color/purple"-->
+<!--    tools:context=".HomeFragment">-->
+
+<!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Home Fragment"-->
+<!--        android:textSize="26dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        />-->
+
+<!--</FrameLayout>-->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple"
-    tools:context=".HomeFragment">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/white"
+    android:padding="20dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Home Fragment"
-        android:textSize="26dp"
+    <!-- Logo or app icon -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="304dp"
+        android:layout_height="200dp"
         android:layout_gravity="center"
+        android:contentDescription="App Logo"
+        android:src="@drawable/quiz_time" />
+
+    <!-- Email TextField -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Quiz App !"
+        android:textStyle="italic"
+        android:textSize="35sp"
+        android:layout_gravity="center"
+        android:textColor="@color/blue"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
         />
 
-</FrameLayout>
+
+        <!-- Start Quiz Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signinButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start a Quiz"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/black"
+        app:iconPadding="8dp"
+        app:iconGravity="textStart"/>
+
+
+
+
+
+</LinearLayout>
