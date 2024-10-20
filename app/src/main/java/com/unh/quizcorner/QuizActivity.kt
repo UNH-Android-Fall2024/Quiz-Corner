@@ -42,6 +42,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
     }
 
+    /**
+     * Below function describes the timer that is being displayed when user starts a quiz.
+     */
     private fun startTimer(){
         val totalTimeInMillis = time.toInt() * 60 *1000L
 
