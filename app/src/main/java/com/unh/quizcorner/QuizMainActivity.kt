@@ -37,9 +37,17 @@ class QuizMainActivity : AppCompatActivity() {
 
     private fun getDataFromFirebase(){
         // dummy data
-        quizModelList.add(QuizModel("1","Programming","Basic programming","10"))
-        quizModelList.add(QuizModel("2","Science","Science topics","10"))
-        quizModelList.add(QuizModel("3","History","Topics of History","10"))
+
+        val listQuestionModel = mutableListOf<QuestionModel>()
+        listQuestionModel.add(QuestionModel("What is Android ? ", mutableListOf("language","OS","Product","None"), correct = "OS"))
+        listQuestionModel.add(QuestionModel("Who owns  Android ? ", mutableListOf("Apple","MS","Kotlin","Google"), correct = "Google"))
+
+        listQuestionModel.add(QuestionModel("Who owns  Android ? ", mutableListOf("Apple","MS","Kotlin","Google"), correct = "Google"))
+
+
+        quizModelList.add(QuizModel("1","Programming","Basic programming","10",listQuestionModel))
+//        quizModelList.add(QuizModel("2","Science","Science topics","10"))
+//        quizModelList.add(QuizModel("3","History","Topics of History","10"))
         setupRecyclerview()
     }
 
