@@ -21,6 +21,8 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
     lateinit var binding:ActivityQuizBinding
 
     var currentQuestionIndex = 0;
+    var selectedAnswer = ""
+    var score = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
     }
 
     /**
-     * Below function describes the timer that is being displayed when user starts a quiz.
+     `* Below function describes the timer that is being displayed when user starts a quiz.      /`+ q
      */
     private fun startTimer(){
         val totalTimeInMillis = time.toInt() * 60 *1000L
@@ -71,10 +73,14 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
     private fun loadQuestions(){
         binding.apply {
             questionIndicator.text = "Question ${currentQuestionIndex+1}/ ${questionModelList.size}"
+
             questionProgressIndicator.progress =
                 (currentQuestionIndex.toFloat()/ questionModelList.size.toFloat() * 100).toInt()
+
+            // Question
             questionTextview.text = questionModelList[currentQuestionIndex].question
 
+            // Options
             btn0.text = questionModelList[currentQuestionIndex].options[0]
             btn1.text = questionModelList[currentQuestionIndex].options[1]
             btn2.text = questionModelList[currentQuestionIndex].options[2]
@@ -86,17 +92,28 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
     override fun onClick(view: View?) {
 
+        binding.apply {
+            btn0.setBackgroundColor(getColor(R.color.lightBlue))
+            btn1.setBackgroundColor(getColor(R.color.lightBlue))
+            btn2.setBackgroundColor(getColor(R.color.lightBlue))
+            btn3.setBackgroundColor(getColor(R.color.lightBlue))
+        }
+
+
         val clickedBtn = view as Button
         if(clickedBtn.id==R.id.next_btn){
-            // NExt button is clicked
+            // Next button is clicked
+
+            
+
             currentQuestionIndex++
             loadQuestions()
 
         }else {
             // Options are clicked
-
             clickedBtn.setBackgroundColor(getColor(R.color.lightGreen))
 
+            selectedAnswer = clickedBtn.text.toString()
         }
     }
 }

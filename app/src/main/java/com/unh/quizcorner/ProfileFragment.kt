@@ -28,6 +28,7 @@ class ProfileFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         firebaseAuth = FirebaseAuth.getInstance()
 
+
         val profileNameTextView: TextView = view.findViewById(R.id.profile_name)
         val currentUser: FirebaseUser? = firebaseAuth.currentUser
 
