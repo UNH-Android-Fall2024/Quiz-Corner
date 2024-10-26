@@ -71,6 +71,14 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
      */
     @SuppressLint("SetTextI18n")
     private fun loadQuestions(){
+        selectedAnswer = ""
+
+        // checking if the user is answering last question
+        if(currentQuestionIndex == questionModelList.size){
+            finishQuiz()
+            return
+        }
+
         binding.apply {
             questionIndicator.text = "Question ${currentQuestionIndex+1}/ ${questionModelList.size}"
 
@@ -104,7 +112,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         if(clickedBtn.id==R.id.next_btn){
             // Next button is clicked
 
-            
+            if(selectedAnswer == questionModelList[currentQuestionIndex].correct){
+                score++
+            }
 
             currentQuestionIndex++
             loadQuestions()
@@ -116,4 +126,10 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             selectedAnswer = clickedBtn.text.toString()
         }
     }
+
+    private fun  finishQuiz(){
+
+    }
+
+
 }

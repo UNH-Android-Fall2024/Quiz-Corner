@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:padding="16dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Congrats !!"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:id="@+id/score_title"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:trackColor="@color/red"
+            android:progress="70"
+            app:trackCornerRadius="20dp"
+            app:trackThickness="8dp"
+            android:id="@+id/score_progressCircle"
+            app:indicatorSize="70dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50%"
+            android:textSize="18sp"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:paddingLeft="24dp"
+            android:id="@+id/score_progressText"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="6 out of 10 are correct !"
+        android:gravity="center"
+        android:id="@+id/score_result"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:layout_margin="8dp"
+        android:backgroundTint="@color/jeansBlue"
+        android:id="@+id/finish_button"/>
+
+
+</LinearLayout>
