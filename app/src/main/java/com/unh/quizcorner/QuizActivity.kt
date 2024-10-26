@@ -1,15 +1,18 @@
 package com.unh.quizcorner
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.unh.quizcorner.databinding.ActivityQuizBinding
+import com.unh.quizcorner.databinding.ScoreDialogBinding
 
 class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
@@ -127,8 +130,41 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         }
     }
 
-    private fun  finishQuiz(){
+    /**
+     * The method finishQuiz() defines/includes the functionality to display Dialog section after user completes the quiz .
+     *
+     */
 
+    private fun  finishQuiz(){
+        val totalQuestions = questionModelList.size
+        val percentage = ((score.toFloat() / totalQuestions.toFloat() ) *100).toInt()
+
+        val dialogBinding = ScoreDialogBinding.inflate(layoutInflater)
+        dialogBinding.apply {
+            scoreProgressCircle.progress = percentage
+            scoreProgressText.text = "$percentage %"
+            if(percentage>60){
+                scoreTitle.text = "Congrats ! you have passed the exam !"
+                scoreTitle.setTextColor(Color.GREEN)
+            }else {
+                scoreTitle.text = "Oops ! you have failed the exam"
+                scoreTitle.setTextColor(Color.RED)
+            }
+
+            scoreResult.text = "$score out of $totalQuestions are correct !"
+
+            // needed to be coded later
+            finishButton.setOnClickListener {
+                finish()
+            }
+
+        }
+
+        // setting the dialog once the user completes the quiz !
+        AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .setCancelable(false) // so that user cannot click back/ go back
+            .show()
     }
 
 
