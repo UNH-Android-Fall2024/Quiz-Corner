@@ -54,52 +54,58 @@ class QuizMainActivity : AppCompatActivity() {
     private fun getDataFromFirebase() {
         val db = FirebaseFirestore.getInstance()
         quizModelList.clear()
-        val totalQuizzes = db.collection("quizzes").get().addOnSuccessListener { quizDocuments ->
-            var quizCounter = 0
-            for (quizDocument in quizDocuments) {
-                val quizId = quizDocument.id
-                val title = quizDocument.getString("title") ?: ""
-                val subtitle = quizDocument.getString("subtitle") ?: ""
-                val time = quizDocument.getString("time") ?: ""
-                val questionList = mutableListOf<QuestionModel>()
 
-                db.collection("quizzes").document(quizId).collection("questions").get()
-                    .addOnSuccessListener { questionDocuments ->
-                        for (questionDocument in questionDocuments) {
-                            val question = questionDocument.getString("question") ?: ""
-                            val options = questionDocument.get("options") as? List<String> ?: listOf()
-                            val correct = questionDocument.getString("correct") ?: ""
-                            val questionModel = QuestionModel(question, options, correct)
-                            questionList.add(questionModel)
-                        }
+        db.collection("quizzes").get()
+            .addOnSuccessListener { quizDocuments ->
+                val totalQuizzes = quizDocuments.size()
+                var quizCounter = 0
 
-                        val quizModel = QuizModel(quizId, title, subtitle, time, questionList)
-                        quizModelList.add(quizModel)
-                        quizCounter++
+                // Loop through each quiz document
+                for (quizDocument in quizDocuments) {
+                    val quizId = quizDocument.id
+                    val title = quizDocument.getString("title") ?: ""
+                    val subtitle = quizDocument.getString("subtitle") ?: ""
+                    val time = quizDocument.getString("time") ?: ""
+                    val questionList = mutableListOf<QuestionModel>()
 
-                        // When all quizzes are fetched, update the adapter
-                        if (quizCounter == quizDocuments.size()) {
-                            if (!::adapter.isInitialized) {
+                    db.collection("quizzes").document(quizId).collection("questions").get()
+                        .addOnSuccessListener { questionDocuments ->
+                            for (questionDocument in questionDocuments) {
+                                val question = questionDocument.getString("question") ?: ""
+                                val options = questionDocument.get("options") as? List<String> ?: listOf()
+                                val correct = questionDocument.getString("correct") ?: ""
+                                val questionModel = QuestionModel(question, options, correct)
+                                questionList.add(questionModel)
+                            }
+
+                            // Add quiz to the list after fetching questions
+                            quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList))
+                            quizCounter++
+
+                            // Check if all quizzes are fetched
+                            if (quizCounter == totalQuizzes) {
                                 setupRecyclerview()
-                            } else {
-                                adapter.notifyDataSetChanged()
                             }
                         }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("Firestore", "Error fetching questions: ", e)
-                    }
+                        .addOnFailureListener { e ->
+                            Log.e("Firestore", "Error fetching questions for quiz: $quizId", e)
+                        }
+                }
             }
-        }.addOnFailureListener { e ->
-            Log.e("Firestore", "Error fetching quizzes: ", e)
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error fetching quizzes", e)
+            }
+    }
+
+    private fun setupRecyclerview() {
+        if (!::adapter.isInitialized) {
+            adapter = QuizListAdapter(quizModelList)
+            binding.recyclerView.layoutManager = LinearLayoutManager(this)
+            binding.recyclerView.adapter = adapter
+        } else {
+            adapter.notifyDataSetChanged()
         }
     }
 
-
-    private fun setupRecyclerview(){
-        adapter = QuizListAdapter(quizModelList)
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
-    }
 
 }
