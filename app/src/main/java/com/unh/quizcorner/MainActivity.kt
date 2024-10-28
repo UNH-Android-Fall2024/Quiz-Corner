@@ -1,10 +1,11 @@
 package com.unh.quizcorner
 
+/**
+ * This is the Main Activity file which has two fragments , Homefragment , ProfileFragment.
+ * Basically, Bottom Navigation is defined in this Activity .
+ */
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.unh.quizcorner.databinding.ActivityMainBinding
 
@@ -42,3 +43,10 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 }
+
+
+/**
+ * REFERENCES :
+ *
+ * Bottom Navigation : https://www.geeksforgeeks.org/bottom-navigation-bar-in-android-using-kotlin/
+ */

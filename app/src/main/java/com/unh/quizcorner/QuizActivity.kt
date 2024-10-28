@@ -1,16 +1,18 @@
 package com.unh.quizcorner
 
+
+/**
+ * The QuizActivity file demonstrates Quizzes being displayed and results being processed ,
+ * after user submits a quiz .
+ */
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.unh.quizcorner.databinding.ActivityQuizBinding
 import com.unh.quizcorner.databinding.ScoreDialogBinding
 
@@ -48,7 +50,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
     }
 
     /**
-     `* Below function describes the timer that is being displayed when user starts a quiz.      /`+ q
+     `* Below function describes the timer that is being displayed when user starts a quiz.
      */
     private fun startTimer(){
         val totalTimeInMillis = time.toInt() * 60 *1000L
@@ -103,6 +105,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
     override fun onClick(view: View?) {
 
+        // changing the color of buttons when clicked .
         binding.apply {
             btn0.setBackgroundColor(getColor(R.color.lightBlue))
             btn1.setBackgroundColor(getColor(R.color.lightBlue))
@@ -166,6 +169,14 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             .setCancelable(false) // so that user cannot click back/ go back
             .show()
     }
-
-
 }
+
+/**
+ * REFERENCES ::
+ *
+ *  https://stackoverflow.com/questions/52076779/kotlin-custom-dialog-in-android
+ * https://stackoverflow.com/questions/54095875/how-to-create-a-simple-countdown-timer-in-kotlin
+ * https://www.geeksforgeeks.org/progressbar-in-kotlin/
+ * https://stackoverflow.com/questions/10398114/how-to-get-value-of-a-pressed-button
+ * https://www.geeksforgeeks.org/android-recyclerview/
+ */

@@ -1,5 +1,9 @@
 package com.unh.quizcorner
 
+/**
+ * This is ProfileFragment file which represents Basic profile of the user who logged in
+ * User name will be displayed based on the gmail entered by the user.
+ */
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -32,13 +35,16 @@ class ProfileFragment : Fragment() {
         val profileNameTextView: TextView = view.findViewById(R.id.profile_name)
         val currentUser: FirebaseUser? = firebaseAuth.currentUser
 
-        // User name before @  is displaed.
+        // User name before @ from gmail is displayed.
         currentUser?.let {
             val userEmail = it.email
             val userName = ("Welcome," +(userEmail?.substringBefore("@") ?: "User"))
-            profileNameTextView.text = userName
+            //val userName2 = currentUser.displayName
+            profileNameTextView.text = (userName)
         }
 
+        // this is a floating action button which takes user to Add Quiz Activity
+        //where user can add a quiz if needed .
         val fabAddQuiz: FloatingActionButton = view.findViewById(R.id.fab_add_quiz)
         fabAddQuiz.setOnClickListener {
             val intent = Intent(requireContext(), AddquizActivity::class.java)
@@ -48,7 +54,7 @@ class ProfileFragment : Fragment() {
         // Find the sign-out button
         val signOutButton: Button = view.findViewById(R.id.signoutButton)
         signOutButton.setOnClickListener {
-            // Sign out the user
+            // Sign out the user and navigating to Signup page.
             firebaseAuth.signOut()
             val intent = Intent(requireContext(), SignupActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -59,3 +65,9 @@ class ProfileFragment : Fragment() {
         return view
     }
 }
+
+
+/**
+ * REFERENCES :
+ *  https://stackoverflow.com/questions/42571618/how-to-make-a-user-sign-out-in-firebase
+ */

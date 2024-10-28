@@ -1,6 +1,10 @@
 package com.unh.quizcorner
 
-// blueprint of recycler view.
+/**
+ * This is a data class which is basically the blueprint of the firestore database .
+ * QuizModel is the blueprint of the Quiz,
+ * QuestionModel is the blueprint of the questions from the Quiz.
+ */
 data class QuizModel(
 
     val id : String,

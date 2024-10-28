@@ -1,5 +1,8 @@
 package com.unh.quizcorner
 
+/**
+ * The QuizListAdapter demonstrates the adapter setup for recycler view
+ */
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -43,3 +46,11 @@ class QuizListAdapter(private val quizModelList: List<QuizModel>):
     }
 
 }
+
+/**
+ * REFERENCES ::
+ *
+ * https://www.geeksforgeeks.org/android-recyclerview-in-kotlin/
+ * https://androidknowledge.com/recyclerview-in-android-studio-using-kotlin/
+ * https://www.geeksforgeeks.org/android-recyclerview/
+ */

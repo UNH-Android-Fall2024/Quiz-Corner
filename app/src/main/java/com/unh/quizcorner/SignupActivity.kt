@@ -1,5 +1,9 @@
 package com.unh.quizcorner
 
+/**
+ * This is the SignupActivity file which is responsible for the User Signup Authentication.
+ * This class creates an account for the user, and saves it in the database.
+ */
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -30,6 +34,11 @@ override fun onCreate(savedInstanceState: Bundle?) {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
+
+    /**
+     * The below code checks whether the passwords entered are correct or not. If all the data ( email,password,confirmpassword)
+     * are correct, User account will be created and will be navigated to LoginActivity .
+     */
 
     binding.signupButton.setOnClickListener{
         val email = binding.emailInput.text.toString()

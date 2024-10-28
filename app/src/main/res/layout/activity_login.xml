@@ -12,12 +12,21 @@
     <!-- Logo or app icon -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_gravity="center"
         android:contentDescription="App Logo"
-        android:src="@drawable/quiz_image"
+        android:src="@drawable/logo_quiz"
         />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ENGAGE , LEARN and LEVEL UP !"
+        android:textSize="20dp"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:paddingTop="10dp"/>
 
     <!-- Email TextField -->
     <com.google.android.material.textfield.TextInputLayout
@@ -25,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         app:boxBackgroundMode="outline"
-        app:boxStrokeColor="@color/red"
+        app:boxStrokeColor="@color/black"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -34,7 +43,7 @@
             android:layout_height="wrap_content"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:textColor="@color/yellow"
+            android:textColor="@color/black"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,7 +62,7 @@
             android:layout_height="wrap_content"
             android:hint="Password"
             android:inputType="textPassword"
-            android:textColor="@color/lightGreen"
+            android:textColor="@color/black"
             />
     </com.google.android.material.textfield.TextInputLayout>
 

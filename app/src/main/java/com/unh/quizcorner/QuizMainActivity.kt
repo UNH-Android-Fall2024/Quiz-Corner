@@ -1,18 +1,15 @@
 package com.unh.quizcorner
 
+/**
+ * The QuizMainActivity file is the landing page for the user inn order to attempt a quiz.
+ * The file displays all the quizzes that are in firestore database on to the screen.
+ */
+
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.widget.Toolbar
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
-import com.unh.quizcorner.databinding.ActivityMainBinding
 import com.unh.quizcorner.databinding.ActivityQuizMainBinding
 
 class QuizMainActivity : AppCompatActivity() {
@@ -109,3 +106,11 @@ class QuizMainActivity : AppCompatActivity() {
 
 
 }
+
+/**
+ * REFERENCES ::
+ *
+ * https://firebase.google.com/docs/database/android/read-and-write
+ * https://www.youtube.com/watch?v=EMM_3Wld2jU
+ * https://www.geeksforgeeks.org/how-to-retrieve-data-from-the-firebase-realtime-database-in-android/
+ */
