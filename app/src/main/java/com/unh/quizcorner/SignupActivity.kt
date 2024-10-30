@@ -29,6 +29,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
     binding = ActivitySignupBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
+    // instantiate firebase
     firebaseAuth = FirebaseAuth.getInstance()
     binding.signInText.setOnClickListener{
         val intent = Intent(this, LoginActivity::class.java)

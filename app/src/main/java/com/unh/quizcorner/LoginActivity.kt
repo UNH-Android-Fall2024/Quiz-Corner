@@ -22,6 +22,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Instantiating firebase .
         firebaseAuth = FirebaseAuth.getInstance()
         binding.haventregisteredText.setOnClickListener {
             val intent = Intent(this, SignupActivity::class.java)

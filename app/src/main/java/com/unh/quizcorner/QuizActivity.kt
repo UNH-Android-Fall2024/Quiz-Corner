@@ -164,6 +164,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         }
 
         // setting the dialog once the user completes the quiz !
+        // sample coment to check git
         AlertDialog.Builder(this)
             .setView(dialogBinding.root)
             .setCancelable(false) // so that user cannot click back/ go back
