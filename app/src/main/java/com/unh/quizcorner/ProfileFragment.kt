@@ -22,7 +22,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var firebaseAuth: FirebaseAuth
 
-
+// this is a profile section comment 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
