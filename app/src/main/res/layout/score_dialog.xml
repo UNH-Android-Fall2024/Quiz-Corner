@@ -54,5 +54,16 @@
         android:backgroundTint="@color/jeansBlue"
         android:id="@+id/finish_button"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/result_emoji_text"
+        android:text="Emoji Based on your score : ;) "
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/jeansBlue"
+        />
+
 
 </LinearLayout>

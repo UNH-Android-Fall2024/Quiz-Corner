@@ -148,6 +148,13 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         val totalQuestions = questionModelList.size
         val percentage = ((score.toFloat() / totalQuestions.toFloat() ) *100).toInt()
 
+        val emoji = when (percentage) {
+            in 10..40 -> "\uD83D\uDE1E" // Sad emoji
+            in 41..79 -> "\uD83D\uDE42" // Simple smile emoji
+            in 80..100 -> "\uD83D\uDD25" // Star lightning emoji
+            else -> "\uD83D\uDE10" // Neutral face for unexpected range
+        }
+
         val dialogBinding = ScoreDialogBinding.inflate(layoutInflater)
         dialogBinding.apply {
             scoreProgressCircle.progress = percentage
@@ -162,13 +169,15 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
             scoreResult.text = "$score out of $totalQuestions are correct !"
 
+            resultEmojiText.text = "Emoji based on your Score = $emoji"
+
+
             // needed to be coded later
             finishButton.setOnClickListener {
                 finish()
             }
 
         }
-
         
         AlertDialog.Builder(this)
             .setView(dialogBinding.root)
