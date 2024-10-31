@@ -30,7 +30,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set up the button click listener to navigate to QuizMainActivity
+        /**
+         *   Setting up the button click listener to navigate to QuizMainActivity
+          */
         binding.navigateQuizButton.setOnClickListener {
             val intent = Intent(requireActivity(), QuizMainActivity::class.java)
             startActivity(intent)

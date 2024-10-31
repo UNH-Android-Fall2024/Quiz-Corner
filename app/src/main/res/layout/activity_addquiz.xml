@@ -13,7 +13,13 @@
         android:textSize="20dp"
         android:id="@+id/add_quiz_heading"
         android:background="@color/peach"
-        android:text="Add a Quiz ..."/>
+        android:text="Add a Quiz.."/>
+
+    <EditText
+        android:id="@+id/quiz_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Quiz ID"/>
 
     <EditText
         android:id="@+id/quiz_title"
@@ -39,7 +45,7 @@
         android:gravity="center"
         android:textSize="20dp"
         android:background="@color/lightGreen"
-        android:text="Add Question and Options here ..."/>
+        android:text="Add Question and Options here.."/>
 
     <EditText
         android:id="@+id/question_text"

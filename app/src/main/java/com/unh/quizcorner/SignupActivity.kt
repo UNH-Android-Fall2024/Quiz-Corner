@@ -66,3 +66,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 }
 }
+
+/**
+ * REFERENCES ::
+ * https://www.geeksforgeeks.org/login-and-registration-in-android-using-firebase-in-kotlin/
+ *
+ */
