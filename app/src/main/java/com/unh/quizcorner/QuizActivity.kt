@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.unh.quizcorner.databinding.ActivityQuizBinding
@@ -118,6 +119,11 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         if(clickedBtn.id==R.id.next_btn){
             // Next button is clicked
 
+            if(selectedAnswer.isEmpty()){
+                Toast.makeText(applicationContext, "Please Select an answer to proceed !", Toast.LENGTH_SHORT).show()
+                return;
+            }
+
             if(selectedAnswer == questionModelList[currentQuestionIndex].correct){
                 score++
             }
@@ -163,8 +169,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
         }
 
-        // setting the dialog once the user completes the quiz !
-        // sample coment to check git
+        
         AlertDialog.Builder(this)
             .setView(dialogBinding.root)
             .setCancelable(false) // so that user cannot click back/ go back
