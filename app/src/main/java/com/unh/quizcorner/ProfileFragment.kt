@@ -16,11 +16,13 @@ import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class ProfileFragment : Fragment() {
 
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
 
     @SuppressLint("MissingInflatedId")
@@ -30,17 +32,26 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         firebaseAuth = FirebaseAuth.getInstance()
-
+        firestore = FirebaseFirestore.getInstance()
 
         val profileNameTextView: TextView = view.findViewById(R.id.profile_name)
         val currentUser: FirebaseUser? = firebaseAuth.currentUser
 
         // User name before @ from gmail is displayed.
         currentUser?.let {
-            val userEmail = it.email
-            val userName = ("Welcome," +(userEmail?.substringBefore("@") ?: "User"))
-            //val userName2 = currentUser.displayName
-            profileNameTextView.text = (userName)
+            val userId = it.uid // Get the user ID
+            // Fetch the user document from Firestore
+            firestore.collection("users").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        // Get the nickname from the document
+                        val nickname = document.getString("nickname")
+                        profileNameTextView.text = ("Welcome , " + nickname)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    profileNameTextView.text = "Error fetching nickname"
+                }
         }
 
         // this is a floating action button which takes user to Add Quiz Activity
@@ -66,7 +77,7 @@ class ProfileFragment : Fragment() {
     }
 }
 
-
+// comment
 /**
  * REFERENCES :
  *  https://stackoverflow.com/questions/42571618/how-to-make-a-user-sign-out-in-firebase

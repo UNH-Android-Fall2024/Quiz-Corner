@@ -84,6 +84,25 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Nickname TextField -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/red"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nicknameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nickname"
+            android:textColor="@color/black"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
     <!-- Signup Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signupButton"
