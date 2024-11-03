@@ -19,10 +19,10 @@ import com.google.firebase.auth.FirebaseUser
 
 
 class ProfileFragment : Fragment() {
-
+    // Firebase Authentication instance for managing the current user session
     private lateinit var firebaseAuth: FirebaseAuth
 
-// this is a profile section comment 
+    // this is a profile section comment
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,3 +71,4 @@ class ProfileFragment : Fragment() {
  * REFERENCES :
  *  https://stackoverflow.com/questions/42571618/how-to-make-a-user-sign-out-in-firebase
  */
+
