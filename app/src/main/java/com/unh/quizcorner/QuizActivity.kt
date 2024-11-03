@@ -77,13 +77,12 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
      */
     @SuppressLint("SetTextI18n")
     private fun loadQuestions(){
-        selectedAnswer = ""
-
-        // checking if the user is answering last question
-        if(currentQuestionIndex == questionModelList.size){
+        if (currentQuestionIndex >= questionModelList.size) {
             finishQuiz()
             return
         }
+
+        selectedAnswer = "" // Reset the selected answer for the new question
 
         binding.apply {
             questionIndicator.text = "Question ${currentQuestionIndex+1}/ ${questionModelList.size}"
@@ -144,9 +143,12 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
      *
      */
 
-    private fun  finishQuiz(){
+    private fun finishQuiz() {
+        // Check if the activity is finishing or if the quiz has already been finished
+        if (isFinishing) return
+
         val totalQuestions = questionModelList.size
-        val percentage = ((score.toFloat() / totalQuestions.toFloat() ) *100).toInt()
+        val percentage = ((score.toFloat() / totalQuestions.toFloat()) * 100).toInt()
 
         val emoji = when (percentage) {
             in 10..40 -> "\uD83D\uDE1E" // Sad emoji
@@ -159,31 +161,31 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         dialogBinding.apply {
             scoreProgressCircle.progress = percentage
             scoreProgressText.text = "$percentage %"
-            if(percentage>60){
-                scoreTitle.text = "Congrats ! you have passed the exam !"
+            if (percentage > 60) {
+                scoreTitle.text = "Congrats! You have passed the exam!"
                 scoreTitle.setTextColor(Color.GREEN)
-            }else {
-                scoreTitle.text = "Oops ! you have failed the exam"
+            } else {
+                scoreTitle.text = "Oops! You have failed the exam"
                 scoreTitle.setTextColor(Color.RED)
             }
 
-            scoreResult.text = "$score out of $totalQuestions are correct !"
-
+            scoreResult.text = "$score out of $totalQuestions are correct!"
             resultEmojiText.text = "Emoji based on your Score = $emoji"
 
-
-            // needed to be coded later
             finishButton.setOnClickListener {
                 finish()
             }
-
         }
-        
-        AlertDialog.Builder(this)
-            .setView(dialogBinding.root)
-            .setCancelable(false) // so that user cannot click back/ go back
-            .show()
+
+        // Show the dialog only if the activity is not finishing
+        if (!isFinishing) {
+            AlertDialog.Builder(this)
+                .setView(dialogBinding.root)
+                .setCancelable(false) // Prevent the user from dismissing the dialog
+                .show()
+        }
     }
+
 }
 
 /**

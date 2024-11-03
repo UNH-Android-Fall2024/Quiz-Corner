@@ -13,7 +13,8 @@
         android:textSize="20dp"
         android:id="@+id/add_quiz_heading"
         android:background="@color/peach"
-        android:text="Add a Quiz.."/>
+        android:text="Add a Quiz.."
+        />
 
     <EditText
         android:id="@+id/quiz_id"
