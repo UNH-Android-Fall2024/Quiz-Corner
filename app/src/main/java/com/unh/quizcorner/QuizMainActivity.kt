@@ -31,25 +31,18 @@ class QuizMainActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         quizModelList.clear()
 
-        // Fetch user's quizzes
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
-        // Fetch quizzes created by the user
-        db.collection("users").document(userId).collection("quizzes").get()
-            .addOnSuccessListener { userQuizDocuments ->
-                var totalQuizzes = userQuizDocuments.size()
-                var quizCounter = 0
-
-                // Loop through each user quiz document
-                for (quizDocument in userQuizDocuments) {
+        // Fetch quizzes from the top-level "quizzes" collection
+        db.collection("quizzes").get()
+            .addOnSuccessListener { quizDocuments ->
+                for (quizDocument in quizDocuments) {
                     val quizId = quizDocument.id
                     val title = quizDocument.getString("title") ?: ""
                     val subtitle = quizDocument.getString("subtitle") ?: ""
                     val time = quizDocument.getString("time") ?: ""
                     val questionList = mutableListOf<QuestionModel>()
 
-                    // Fetch questions for the user's quiz
-                    db.collection("users").document(userId).collection("quizzes").document(quizId).collection("questions").get()
+                    // Fetch questions for each quiz
+                    db.collection("quizzes").document(quizId).collection("questions").get()
                         .addOnSuccessListener { questionDocuments ->
                             for (questionDocument in questionDocuments) {
                                 val question = questionDocument.getString("question") ?: ""
@@ -61,64 +54,15 @@ class QuizMainActivity : AppCompatActivity() {
 
                             // Add quiz to the list after fetching questions
                             quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList))
-                            quizCounter++
-
-                            // Check if all user's quizzes are fetched
-                            if (quizCounter == totalQuizzes) {
-                                // Now fetch public quizzes
-                                fetchPublicQuizzes()
-                            }
+                            setupRecyclerview() // Set up RecyclerView once quizzes are added
                         }
                         .addOnFailureListener { e ->
-                            Log.e("Firestore", "Error fetching questions for user's quiz: $quizId", e)
-                        }
-                }
-
-                // If the user has no quizzes, directly fetch public quizzes
-                if (totalQuizzes == 0) {
-                    fetchPublicQuizzes()
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Error fetching user's quizzes", e)
-            }
-    }
-
-    private fun fetchPublicQuizzes() {
-        val db = FirebaseFirestore.getInstance()
-
-        // Fetch public quizzes
-        db.collection("quizzes").get()
-            .addOnSuccessListener { publicQuizDocuments ->
-                for (publicQuizDocument in publicQuizDocuments) {
-                    val quizId = publicQuizDocument.id
-                    val title = publicQuizDocument.getString("title") ?: ""
-                    val subtitle = publicQuizDocument.getString("subtitle") ?: ""
-                    val time = publicQuizDocument.getString("time") ?: ""
-                    val questionList = mutableListOf<QuestionModel>()
-
-                    // Fetch questions for the public quiz
-                    db.collection("quizzes").document(quizId).collection("questions").get()
-                        .addOnSuccessListener { questionDocuments ->
-                            for (questionDocument in questionDocuments) {
-                                val question = questionDocument.getString("question") ?: ""
-                                val options = questionDocument.get("options") as? List<String> ?: listOf()
-                                val correct = questionDocument.getString("correct") ?: ""
-                                val questionModel = QuestionModel(question, options, correct)
-                                questionList.add(questionModel)
-                            }
-
-                            // Add public quiz to the list after fetching questions
-                            quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList))
-                            setupRecyclerview()  // Set up RecyclerView once public quizzes are added
-                        }
-                        .addOnFailureListener { e ->
-                            Log.e("Firestore", "Error fetching questions for public quiz: $quizId", e)
+                            Log.e("Firestore", "Error fetching questions for quiz: $quizId", e)
                         }
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error fetching public quizzes", e)
+                Log.e("Firestore", "Error fetching quizzes", e)
             }
     }
 
@@ -132,6 +76,8 @@ class QuizMainActivity : AppCompatActivity() {
         }
     }
 }
+
+
 
 
 /**

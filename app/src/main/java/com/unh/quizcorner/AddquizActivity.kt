@@ -2,6 +2,7 @@ package com.unh.quizcorner
 
 import android.R.id
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -79,21 +80,33 @@ class AddquizActivity : AppCompatActivity() {
         if (quizId.isNotEmpty() && quizTitle.isNotEmpty() && quizSubtitle.isNotEmpty() &&
             quizTime != null && questionsList.isNotEmpty()) {
 
-            // Create a new Quiz object
-            val newQuiz = QuizModel(
-                id = quizId,
-                title = quizTitle,
-                Subtitle = quizSubtitle,
-                time = quizTime.toString(),
-                questionList = questionsList
+            val newQuiz = mapOf(
+                "id" to quizId,
+                "title" to quizTitle,
+                "subtitle" to quizSubtitle,
+                "time" to quizTime.toString()
             )
 
-            // Save the quiz to the user's collection in Firestore
-            val userId = firebaseAuth.currentUser?.uid ?: return
-            firestore.collection("users").document(userId).collection("quizzes").document(quizId).set(newQuiz)
+            // Reference to the 'quizzes' collection
+            val quizRef = firestore.collection("quizzes").document(quizId)
+
+            // Adding  the quiz data
+            quizRef.set(newQuiz)
                 .addOnSuccessListener {
+                    // Add questions to the sub-collection
+                    for ((index, question) in questionsList.withIndex()) {
+                        val questionData = mapOf(
+                            "question" to question.question,
+                            "options" to question.options,
+                            "correct" to question.correct
+                        )
+                        quizRef.collection("questions").document("question_$index").set(questionData)
+                            .addOnFailureListener { e ->
+                                Log.e("Firestore", "Error adding question $index: ${e.message}")
+                            }
+                    }
                     Toast.makeText(this, "Quiz created successfully!", Toast.LENGTH_SHORT).show()
-                    finish() // Optionally go back to previous activity
+                    finish()
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Error creating quiz: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -102,5 +115,7 @@ class AddquizActivity : AppCompatActivity() {
             Toast.makeText(this, "Please fill all fields and add questions", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
 }
