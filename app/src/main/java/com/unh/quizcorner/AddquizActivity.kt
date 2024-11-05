@@ -90,7 +90,7 @@ class AddquizActivity : AppCompatActivity() {
             // Reference to the 'quizzes' collection
             val quizRef = firestore.collection("quizzes").document(quizId)
 
-            // Adding  the quiz data
+            // Adding the quiz data
             quizRef.set(newQuiz)
                 .addOnSuccessListener {
                     // Add questions to the sub-collection
