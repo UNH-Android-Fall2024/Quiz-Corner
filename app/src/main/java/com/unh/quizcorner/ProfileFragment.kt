@@ -19,9 +19,8 @@ import com.google.firebase.auth.FirebaseUser
 
 
 class ProfileFragment : Fragment() {
-    // Firebase Authentication instance for managing the current user session
+    //Declare FirebaseAuth instance to handle user authentication
     private lateinit var firebaseAuth: FirebaseAuth
-
     // this is a profile section comment
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
