@@ -90,7 +90,8 @@ class AddquizActivity : AppCompatActivity() {
             // Referencing to the 'quizzes' collection
             val quizFirst = firestore.collection("quizzes").document(quizId)
 
-            val quizSecond = firestore.collection()
+            val db = FirebaseFirestore.getInstance()
+            val userId = firebaseAuth.currentUser?.uid ?: return
 
             // Adding the quiz data
             quizFirst.set(newQuiz)
@@ -113,6 +114,21 @@ class AddquizActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Error creating quiz: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+
+            val userQuizData = mapOf("title" to quizTitle, "id" to quizId)
+            db.collection("users").document(userId)
+                .collection("createdQuizzes")
+                .document(quizId)
+                .set(userQuizData)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Quiz added to user's collection!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to update user's collection: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+
+
         } else {
             Toast.makeText(this, "Please fill all fields and add questions", Toast.LENGTH_SHORT).show()
         }
