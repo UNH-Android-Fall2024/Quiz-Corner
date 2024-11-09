@@ -21,7 +21,7 @@ class UserQuestionsAdapter(private val questions: List<QuestionModel>) : Recycle
     override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val question = questions[position]
         holder.questionTextView.text = question.question
-        holder.optionsTextView.text = question.options.joinToString(", ") // Join options into a single string
+        holder.optionsTextView.text = question.options.joinToString(", ")
     }
 
     override fun getItemCount(): Int {

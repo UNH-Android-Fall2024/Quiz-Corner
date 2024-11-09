@@ -33,12 +33,12 @@ class AddquizActivity : AppCompatActivity() {
         recyclerView.adapter = questionsAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Add question button functionality
+        // Adding question button functionality
         binding.addQuestionBtn.setOnClickListener {
             addQuestion()
         }
 
-        // Create quiz button functionality
+        // Creating quiz button functionality
         binding.pushQuizBtn.setOnClickListener {
             createQuiz()
         }
@@ -87,11 +87,13 @@ class AddquizActivity : AppCompatActivity() {
                 "time" to quizTime.toString()
             )
 
-            // Reference to the 'quizzes' collection
-            val quizRef = firestore.collection("quizzes").document(quizId)
+            // Referencing to the 'quizzes' collection
+            val quizFirst = firestore.collection("quizzes").document(quizId)
+
+            val quizSecond = firestore.collection()
 
             // Adding the quiz data
-            quizRef.set(newQuiz)
+            quizFirst.set(newQuiz)
                 .addOnSuccessListener {
                     // Add questions to the sub-collection
                     for ((index, question) in questionsList.withIndex()) {
@@ -100,7 +102,7 @@ class AddquizActivity : AppCompatActivity() {
                             "options" to question.options,
                             "correct" to question.correct
                         )
-                        quizRef.collection("questions").document("question_$index").set(questionData)
+                        quizFirst.collection("questions").document("question_$index").set(questionData)
                             .addOnFailureListener { e ->
                                 Log.e("Firestore", "Error adding question $index: ${e.message}")
                             }
