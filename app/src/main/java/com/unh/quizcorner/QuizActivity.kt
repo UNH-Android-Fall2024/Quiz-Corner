@@ -214,7 +214,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             "rating" to userRating
         )
 
-        // Add the rating to the ratings subcollection
+        // Add the rating to the ratings subcollection "ratings"
         firestore.collection("quizzes")
             .document(quizId)
             .collection("ratings")
