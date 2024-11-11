@@ -54,6 +54,16 @@
         android:backgroundTint="@color/jeansBlue"
         android:id="@+id/finish_button"/>
 
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBar"
+        android:numStars="5"
+        android:stepSize="0.1"
+        android:isIndicator="true"
+
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
