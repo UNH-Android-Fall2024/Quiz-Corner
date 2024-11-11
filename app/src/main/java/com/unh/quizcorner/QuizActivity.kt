@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.unh.quizcorner.databinding.ActivityQuizBinding
@@ -156,14 +155,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             }
 
             scoreResult.text = "$score out of $totalQuestions are correct !"
-
-            // needed to be coded later anit
             finishButton.setOnClickListener {
-                Toast.makeText(
-                    this@QuizActivity,
-                    "You have successfully answered the quiz and your score is $score",
-                    Toast.LENGTH_LONG
-                ).show()
                 finish()
             }
 
