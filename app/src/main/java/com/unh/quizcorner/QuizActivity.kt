@@ -14,6 +14,8 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.unh.quizcorner.databinding.ActivityQuizBinding
 import com.unh.quizcorner.databinding.ScoreDialogBinding
 
@@ -29,12 +31,22 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
     var currentQuestionIndex = 0;
     var selectedAnswer = ""
     var score = 0;
+    var quizId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityQuizBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Retrieve the quizId passed from the adapter
+        quizId = intent.getStringExtra("quizId") ?: ""
+
+        // Check if the quizId is null or empty
+        if (quizId.isEmpty()) {
+            Toast.makeText(this, "Quiz ID not found. Cannot submit rating.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         binding.apply {
             btn0.setOnClickListener(this@QuizActivity)
@@ -46,8 +58,6 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
         loadQuestions()
         startTimer()
-
-
     }
 
     /**
@@ -144,46 +154,77 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
      */
 
     private fun finishQuiz() {
-        // Check if the activity is finishing or if the quiz has already been finished
         if (isFinishing) return
 
         val totalQuestions = questionModelList.size
         val percentage = ((score.toFloat() / totalQuestions.toFloat()) * 100).toInt()
 
         val emoji = when (percentage) {
-            in 10..40 -> "\uD83D\uDE1E" // Sad emoji
-            in 41..79 -> "\uD83D\uDE42" // Simple smile emoji
-            in 80..100 -> "\uD83D\uDD25" // Star lightning emoji
-            else -> "\uD83D\uDE10" // Neutral face for unexpected range
+            in 10..40 -> "\uD83D\uDE1E"
+            in 41..79 -> "\uD83D\uDE42"
+            in 80..100 -> "\uD83D\uDD25"
+            else -> "\uD83D\uDE10"
         }
 
         val dialogBinding = ScoreDialogBinding.inflate(layoutInflater)
         dialogBinding.apply {
             scoreProgressCircle.progress = percentage
             scoreProgressText.text = "$percentage %"
-            if (percentage > 60) {
-                scoreTitle.text = "Congrats! You have passed the exam!"
-                scoreTitle.setTextColor(Color.GREEN)
-            } else {
-                scoreTitle.text = "Oops! You have failed the exam"
-                scoreTitle.setTextColor(Color.RED)
-            }
-
+            scoreTitle.text = if (percentage > 60) "Congrats! You passed!" else "Oops! You failed."
             scoreResult.text = "$score out of $totalQuestions are correct!"
             resultEmojiText.text = "Emoji based on your Score = $emoji"
 
             finishButton.setOnClickListener {
                 finish()
             }
+
+            // When the user changes the rating, submit it to Firebase
+            ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
+                submitRatingToFirebase(rating)
+            }
         }
 
-        // Show the dialog only if the activity is not finishing
         if (!isFinishing) {
             AlertDialog.Builder(this)
                 .setView(dialogBinding.root)
-                .setCancelable(false) // Prevent the user from dismissing the dialog
+                .setCancelable(false)
                 .show()
         }
+    }
+
+    private fun submitRatingToFirebase(userRating: Float) {
+        val firestore = FirebaseFirestore.getInstance()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userId = currentUser?.uid
+
+        if (userId == null) {
+            Toast.makeText(this, "User not logged in. Cannot submit rating.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val quizId = intent.getStringExtra("quizId")
+        if (quizId.isNullOrEmpty()) {
+            Toast.makeText(this, "Quiz ID not found. Cannot submit rating.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Create the rating data
+        val ratingData = hashMapOf(
+            "userId" to userId,
+            "rating" to userRating
+        )
+
+        // Add the rating to the ratings subcollection
+        firestore.collection("quizzes")
+            .document(quizId)
+            .collection("ratings")
+            .add(ratingData)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Rating submitted successfully!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to submit rating: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
 }
