@@ -24,7 +24,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
     }
 
     lateinit var binding:ActivityQuizBinding
-
+    // Variables to track the current question index, the selected answer, and the user's score
     var currentQuestionIndex = 0;
     var selectedAnswer = ""
     var score = 0;
