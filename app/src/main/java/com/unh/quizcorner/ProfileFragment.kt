@@ -64,6 +64,7 @@ class ProfileFragment : Fragment() {
         return view
     }
 }
+// Notifiaction feature successfully set up by anitha
 
 
 /**
