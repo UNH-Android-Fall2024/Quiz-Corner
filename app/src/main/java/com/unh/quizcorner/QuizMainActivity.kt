@@ -5,6 +5,7 @@ package com.unh.quizcorner
  * The file displays all the quizzes that are in firestore database on to the screen.
  */
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -66,6 +67,7 @@ class QuizMainActivity : AppCompatActivity() {
             }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setupRecyclerview() {
         if (!::adapter.isInitialized) {
             adapter = QuizListAdapter(quizModelList)
