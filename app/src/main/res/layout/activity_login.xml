@@ -66,8 +66,6 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
 
-
-
     <!-- Signup Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signinButton"
