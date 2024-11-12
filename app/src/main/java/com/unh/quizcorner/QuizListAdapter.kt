@@ -22,7 +22,6 @@ class QuizListAdapter(private val quizModelList: List<QuizModel>):
                 root.setOnClickListener {
                     val intent  = Intent(root.context,QuizActivity::class.java)
 
-                    // fetching the quiz ID to save ratings ..
                     intent.putExtra("quizId", model.id)
                     intent.putExtra("time", model.time)
 

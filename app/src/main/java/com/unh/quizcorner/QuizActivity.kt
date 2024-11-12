@@ -14,10 +14,21 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.unh.quizcorner.databinding.ActivityQuizBinding
 import com.unh.quizcorner.databinding.ScoreDialogBinding
+
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 
 class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
@@ -159,6 +170,8 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         val totalQuestions = questionModelList.size
         val percentage = ((score.toFloat() / totalQuestions.toFloat()) * 100).toInt()
 
+        sendQuizCompletionNotification(score, totalQuestions)
+
         val emoji = when (percentage) {
             in 10..40 -> "\uD83D\uDE1E"
             in 41..79 -> "\uD83D\uDE42"
@@ -192,6 +205,54 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         }
     }
 
+    private fun sendQuizCompletionNotification(score: Int, totalQuestions: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    1
+                )
+                return
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "quiz_completion_channel"
+            val channelName = "Quiz Completion Notifications"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = "Notifications for quiz completion"
+            }
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(this, "quiz_completion_channel")
+            .setSmallIcon(R.drawable.logo_quiz) // replace with your icon
+            .setContentTitle("Quiz Completed!")
+            .setContentText("You have successfully completed your quiz with a score of $score/$totalQuestions.")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        NotificationManagerCompat.from(this).notify(1, notification.build())
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                sendQuizCompletionNotification(score, questionModelList.size)
+            }
+        }
+    }
+
     private fun submitRatingToFirebase(userRating: Float) {
         val firestore = FirebaseFirestore.getInstance()
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -214,7 +275,7 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             "rating" to userRating
         )
 
-        // Add the rating to the ratings subcollection "ratings"
+        // Add the rating to the ratings subcollection
         firestore.collection("quizzes")
             .document(quizId)
             .collection("ratings")
