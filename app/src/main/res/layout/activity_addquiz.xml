@@ -93,6 +93,16 @@
         android:layout_weight="1"
         android:scrollbars="vertical"/>
 
+    <ToggleButton
+        android:id="@+id/privacy_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Public"
+        android:textOff="Private"
+        android:layout_gravity="center"
+        android:checked="false"
+        android:textColor="@color/black" />
+
     <Button
         android:id="@+id/push_quiz_btn"
         android:layout_width="match_parent"
