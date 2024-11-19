@@ -30,16 +30,22 @@ class QuizMainActivity : AppCompatActivity() {
 
     private fun getDataFromFirebase() {
         val db = FirebaseFirestore.getInstance()
+        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email ?: return
         quizModelList.clear()
 
-        // Fetch quizzes from the top-level "quizzes" collection
-        db.collection("quizzes").get()
+        // Fetch quizzes created by the current user (both public and private)
+        db.collection("users")
+            .document(currentUserEmail)
+            .collection("createdQuizzes") // Fetch from createdQuizzes sub-collection
+            .get()
             .addOnSuccessListener { quizDocuments ->
+                // Add user's created quizzes to the list
                 for (quizDocument in quizDocuments) {
                     val quizId = quizDocument.id
                     val title = quizDocument.getString("title") ?: ""
                     val subtitle = quizDocument.getString("subtitle") ?: ""
                     val time = quizDocument.getString("time") ?: ""
+                    val visibility = quizDocument.getString("visibility") ?: ""
                     val questionList = mutableListOf<QuestionModel>()
 
                     // Fetch questions for each quiz
@@ -54,18 +60,60 @@ class QuizMainActivity : AppCompatActivity() {
                             }
 
                             // Add quiz to the list after fetching questions
-                            quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList))
-                            setupRecyclerview() // Set up RecyclerView once quizzes are added
+                            quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList, visibility))
+                            setupRecyclerview()
                         }
                         .addOnFailureListener { e ->
                             Log.e("Firestore", "Error fetching questions for quiz: $quizId", e)
                         }
                 }
+
+                // Also fetch public quizzes from the "quizzes" collection
+                db.collection("quizzes")
+                    .whereEqualTo("visibility", "public")
+                    .get()
+                    .addOnSuccessListener { quizDocuments ->
+                        for (quizDocument in quizDocuments) {
+                            val quizId = quizDocument.id
+                            val title = quizDocument.getString("title") ?: ""
+                            val subtitle = quizDocument.getString("subtitle") ?: ""
+                            val time = quizDocument.getString("time") ?: ""
+                            val visibility = quizDocument.getString("visibility") ?: ""
+                            val questionList = mutableListOf<QuestionModel>()
+
+                            // Fetch questions for each quiz
+                            db.collection("quizzes").document(quizId).collection("questions").get()
+                                .addOnSuccessListener { questionDocuments ->
+                                    for (questionDocument in questionDocuments) {
+                                        val question = questionDocument.getString("question") ?: ""
+                                        val options = questionDocument.get("options") as? List<String> ?: listOf()
+                                        val correct = questionDocument.getString("correct") ?: ""
+                                        val questionModel = QuestionModel(question, options, correct)
+                                        questionList.add(questionModel)
+                                    }
+
+                                    // Add quiz to the list after fetching questions
+                                    quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList, visibility))
+                                    setupRecyclerview()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("Firestore", "Error fetching questions for quiz: $quizId", e)
+                                }
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("Firestore", "Error fetching public quizzes", e)
+                    }
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error fetching quizzes", e)
+                Log.e("Firestore", "Error fetching created quizzes", e)
             }
     }
+
+
+
+
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setupRecyclerview() {

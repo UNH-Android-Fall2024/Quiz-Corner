@@ -76,6 +76,7 @@ class AddquizActivity : AppCompatActivity() {
         val quizTitle = binding.quizTitle.text.toString()
         val quizSubtitle = binding.quizSubtitle.text.toString()
         val quizTime = binding.quizTime.text.toString().toLongOrNull()
+        val isPublic = binding.privacyToggle.isChecked // Check the toggle state
 
         if (quizId.isNotEmpty() && quizTitle.isNotEmpty() && quizSubtitle.isNotEmpty() &&
             quizTime != null && questionsList.isNotEmpty()) {
@@ -84,18 +85,28 @@ class AddquizActivity : AppCompatActivity() {
                 "id" to quizId,
                 "title" to quizTitle,
                 "subtitle" to quizSubtitle,
-                "time" to quizTime.toString()
+                "time" to quizTime.toString(),
+                "creator" to firebaseAuth.currentUser?.email, // Add the creator's email
+                "visibility" to if (isPublic) "public" else "private" // Set visibility based on toggle
             )
 
-            // Referencing to the 'quizzes' collection
-            val quizFirst = firestore.collection("quizzes").document(quizId)
+            val firestore = FirebaseFirestore.getInstance()
+            val currentUser = firebaseAuth.currentUser
+            val userEmail = currentUser?.email ?: return
 
-            val db = FirebaseFirestore.getInstance()
-            val userId = firebaseAuth.currentUser?.uid ?: return
+            // Save the quiz to the main "quizzes" collection
+            val quizRef = firestore.collection("quizzes").document(quizId)
 
-            // Adding the quiz data
-            quizFirst.set(newQuiz)
+            // Add quiz data to Firestore
+            quizRef.set(newQuiz)
                 .addOnSuccessListener {
+                    // Save quiz to the user's createdQuizzes sub-collection
+                    firestore.collection("users")
+                        .document(userEmail) // Document for the current user
+                        .collection("createdQuizzes")
+                        .document(quizId) // Use quizId as document ID
+                        .set(newQuiz) // Save the quiz to the user's createdQuizzes collection
+
                     // Add questions to the sub-collection
                     for ((index, question) in questionsList.withIndex()) {
                         val questionData = mapOf(
@@ -103,11 +114,12 @@ class AddquizActivity : AppCompatActivity() {
                             "options" to question.options,
                             "correct" to question.correct
                         )
-                        quizFirst.collection("questions").document("question_$index").set(questionData)
+                        quizRef.collection("questions").document("question_$index").set(questionData)
                             .addOnFailureListener { e ->
                                 Log.e("Firestore", "Error adding question $index: ${e.message}")
                             }
                     }
+
                     Toast.makeText(this, "Quiz created successfully!", Toast.LENGTH_SHORT).show()
                     finish()
                 }
@@ -115,24 +127,13 @@ class AddquizActivity : AppCompatActivity() {
                     Toast.makeText(this, "Error creating quiz: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
 
-            val userQuizData = mapOf("title" to quizTitle, "id" to quizId)
-            db.collection("users").document(userId)
-                .collection("createdQuizzes")
-                .document(quizId)
-                .set(userQuizData)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Quiz added to user's collection!", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Failed to update user's collection: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-
-
         } else {
             Toast.makeText(this, "Please fill all fields and add questions", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
 
 
 
