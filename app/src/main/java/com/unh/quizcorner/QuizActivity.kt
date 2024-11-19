@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.unh.quizcorner.databinding.ActivityQuizBinding
 import com.unh.quizcorner.databinding.ScoreDialogBinding
-
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager

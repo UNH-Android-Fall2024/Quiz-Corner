@@ -14,17 +14,24 @@ class QuizListAdapter(private val quizModelList: List<QuizModel>):
 
     class MyViewHolder(private val binding: QuizItemRecyclerViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: QuizModel){
+        fun bind(model: QuizModel) {
             binding.apply {
-                quizTitleText.text= model.title
-                quizSubtitleText.text = model.Subtitle
-                quizTimerText.text = model.time + "min"
-                root.setOnClickListener {
-                    val intent  = Intent(root.context,QuizActivity::class.java)
+                quizTitleText.text = model.title
+                quizSubtitleText.text = model.subtitle
+                quizTimerText.text = "${model.time} min"
 
+                // Display visibility status (public/private)
+                val visibilityText = if (model.visibility == "public") "Public" else "Private"
+
+                // Handle click to start the quiz
+                root.setOnClickListener {
+                    val intent = Intent(root.context, QuizActivity::class.java)
+
+                    // Pass quiz details to QuizActivity
                     intent.putExtra("quizId", model.id)
                     intent.putExtra("time", model.time)
 
+                    // Set the question list and time in QuizActivity
                     QuizActivity.questionModelList = model.questionList
                     QuizActivity.time = model.time
 
@@ -32,6 +39,7 @@ class QuizListAdapter(private val quizModelList: List<QuizModel>):
                 }
             }
         }
+
 
     }
 
