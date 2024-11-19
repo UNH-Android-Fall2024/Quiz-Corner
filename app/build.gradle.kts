@@ -62,4 +62,6 @@ dependencies {
     implementation("androidx.emoji2:emoji2:$emoji2_version")
     implementation("androidx.emoji2:emoji2-views:$emoji2_version")
     implementation("androidx.emoji2:emoji2-views-helper:$emoji2_version")
+    implementation ("com.google.android.gms:play-services-auth:20.6.0")
+    implementation ("com.google.firebase:firebase-auth:22.1.2")
 }
