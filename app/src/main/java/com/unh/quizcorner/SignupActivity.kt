@@ -151,3 +151,10 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 }
+
+/**
+ * REFERENCES ::
+ *
+ *https://www.geeksforgeeks.org/login-and-registration-in-android-using-firebase-in-kotlin/
+ * https://www.geeksforgeeks.org/google-signing-using-firebase-authentication-in-kotlin/
+ */

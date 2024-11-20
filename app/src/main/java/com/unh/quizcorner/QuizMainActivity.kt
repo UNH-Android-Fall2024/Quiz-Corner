@@ -3,6 +3,8 @@ package com.unh.quizcorner
 /**
  * The QuizMainActivity file is the landing page for the user inn order to attempt a quiz.
  * The file displays all the quizzes that are in firestore database on to the screen.
+ *
+ * We're taking a list and adding the private quizzes first and public quizzes next to that list.
  */
 
 import android.annotation.SuppressLint
@@ -28,18 +30,22 @@ class QuizMainActivity : AppCompatActivity() {
         getDataFromFirebase()
     }
 
+    /**
+     * Retrieving data from firebase . Both public and private quizzes.
+     */
     private fun getDataFromFirebase() {
         val db = FirebaseFirestore.getInstance()
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email ?: return
         quizModelList.clear()
 
-        // Fetch quizzes created by the current user (both public and private)
+        /**
+         * Extracting the private quizzes with the help of Email from the user.
+         */
         db.collection("users")
             .document(currentUserEmail)
-            .collection("createdQuizzes") // Fetch from createdQuizzes sub-collection
+            .collection("createdQuizzes")
             .get()
             .addOnSuccessListener { quizDocuments ->
-                // Add user's created quizzes to the list
                 for (quizDocument in quizDocuments) {
                     val quizId = quizDocument.id
                     val title = quizDocument.getString("title") ?: ""
@@ -48,7 +54,6 @@ class QuizMainActivity : AppCompatActivity() {
                     val visibility = quizDocument.getString("visibility") ?: ""
                     val questionList = mutableListOf<QuestionModel>()
 
-                    // Fetch questions for each quiz
                     db.collection("quizzes").document(quizId).collection("questions").get()
                         .addOnSuccessListener { questionDocuments ->
                             for (questionDocument in questionDocuments) {
@@ -59,7 +64,6 @@ class QuizMainActivity : AppCompatActivity() {
                                 questionList.add(questionModel)
                             }
 
-                            // Add quiz to the list after fetching questions
                             quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList, visibility))
                             setupRecyclerview()
                         }
@@ -68,7 +72,9 @@ class QuizMainActivity : AppCompatActivity() {
                         }
                 }
 
-                // Also fetch public quizzes from the "quizzes" collection
+                /**
+                 * Adding public quizzes to the list which already have the private quizzes from above code:
+                 */
                 db.collection("quizzes")
                     .whereEqualTo("visibility", "public")
                     .get()
@@ -81,7 +87,6 @@ class QuizMainActivity : AppCompatActivity() {
                             val visibility = quizDocument.getString("visibility") ?: ""
                             val questionList = mutableListOf<QuestionModel>()
 
-                            // Fetch questions for each quiz
                             db.collection("quizzes").document(quizId).collection("questions").get()
                                 .addOnSuccessListener { questionDocuments ->
                                     for (questionDocument in questionDocuments) {
@@ -91,8 +96,6 @@ class QuizMainActivity : AppCompatActivity() {
                                         val questionModel = QuestionModel(question, options, correct)
                                         questionList.add(questionModel)
                                     }
-
-                                    // Add quiz to the list after fetching questions
                                     quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList, visibility))
                                     setupRecyclerview()
                                 }
@@ -109,12 +112,9 @@ class QuizMainActivity : AppCompatActivity() {
                 Log.e("Firestore", "Error fetching created quizzes", e)
             }
     }
-
-
-
-
-
-
+    /**
+     * Recycler view regarding the question list
+     */
     @SuppressLint("NotifyDataSetChanged")
     private fun setupRecyclerview() {
         if (!::adapter.isInitialized) {
@@ -136,4 +136,5 @@ class QuizMainActivity : AppCompatActivity() {
  * https://firebase.google.com/docs/database/android/read-and-write
  * https://www.youtube.com/watch?v=EMM_3Wld2jU
  * https://www.geeksforgeeks.org/how-to-retrieve-data-from-the-firebase-realtime-database-in-android/
+ * https://stackoverflow.com/questions/46573014/firestore-query-subcollections
  */
