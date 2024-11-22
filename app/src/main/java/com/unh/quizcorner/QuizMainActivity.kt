@@ -28,6 +28,10 @@ class QuizMainActivity : AppCompatActivity() {
         getDataFromFirebase()
     }
 
+    /**
+     * serach bar functionality
+     */
+
     private fun getDataFromFirebase() {
         val db = FirebaseFirestore.getInstance()
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email ?: return
