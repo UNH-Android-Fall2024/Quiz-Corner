@@ -1,10 +1,5 @@
 package com.unh.quizcorner
 
-/**
- * The QuizMainActivity file is the landing page for the user inn order to attempt a quiz.
- * The file displays all the quizzes that are in firestore database on to the screen.
- */
-
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.unh.quizcorner.databinding.ActivityQuizMainBinding
+
 class QuizMainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityQuizMainBinding
-    lateinit var quizModelList: MutableList<QuizModel>
-    lateinit var adapter: QuizListAdapter
+    private lateinit var binding: ActivityQuizMainBinding
+    private lateinit var quizModelList: MutableList<QuizModel>
+    private lateinit var filteredQuizList: MutableList<QuizModel> // For search functionality
+    private lateinit var adapter: QuizListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,25 +22,72 @@ class QuizMainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         quizModelList = mutableListOf()
+        filteredQuizList = mutableListOf()
+
+        setupRecyclerView()
+        setupSearchView()
         getDataFromFirebase()
     }
 
     /**
-     * serach bar functionality
+     * Sets up the RecyclerView with the filtered quiz list.
      */
+    private fun setupRecyclerView() {
+        adapter = QuizListAdapter(filteredQuizList) // Use the filtered list in the adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+    }
 
+    /**
+     * Configures the SearchView to filter quizzes based on user input.
+     */
+    private fun setupSearchView() {
+        binding.searchBar.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                filterQuizzes(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterQuizzes(newText)
+                return true
+            }
+        })
+    }
+
+    /**
+     * Filters the quiz list based on the search query.
+     */
+    private fun filterQuizzes(query: String?) {
+        if (query.isNullOrEmpty()) {
+            // If query is empty, show all quizzes
+            filteredQuizList.clear()
+            filteredQuizList.addAll(quizModelList)
+        } else {
+            val lowerCaseQuery = query.lowercase()
+            filteredQuizList.clear()
+            filteredQuizList.addAll(quizModelList.filter { quiz ->
+                quiz.title.lowercase().contains(lowerCaseQuery) ||
+                        quiz.subtitle.lowercase().contains(lowerCaseQuery)
+            })
+        }
+        adapter.notifyDataSetChanged() // Notify the adapter to update the UI
+    }
+
+    /**
+     * Fetches quiz data from Firebase Firestore.
+     */
     private fun getDataFromFirebase() {
         val db = FirebaseFirestore.getInstance()
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email ?: return
         quizModelList.clear()
 
-        // Fetch quizzes created by the current user (both public and private)
+        // Fetch quizzes created by the current user
         db.collection("users")
             .document(currentUserEmail)
-            .collection("createdQuizzes") // Fetch from createdQuizzes sub-collection
+            .collection("createdQuizzes")
             .get()
             .addOnSuccessListener { quizDocuments ->
-                // Add user's created quizzes to the list
                 for (quizDocument in quizDocuments) {
                     val quizId = quizDocument.id
                     val title = quizDocument.getString("title") ?: ""
@@ -65,14 +109,14 @@ class QuizMainActivity : AppCompatActivity() {
 
                             // Add quiz to the list after fetching questions
                             quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList, visibility))
-                            setupRecyclerview()
+                            updateFilteredList() // Update filtered list to display all quizzes initially
                         }
                         .addOnFailureListener { e ->
                             Log.e("Firestore", "Error fetching questions for quiz: $quizId", e)
                         }
                 }
 
-                // Also fetch public quizzes from the "quizzes" collection
+                // Fetch public quizzes from the "quizzes" collection
                 db.collection("quizzes")
                     .whereEqualTo("visibility", "public")
                     .get()
@@ -98,7 +142,7 @@ class QuizMainActivity : AppCompatActivity() {
 
                                     // Add quiz to the list after fetching questions
                                     quizModelList.add(QuizModel(quizId, title, subtitle, time, questionList, visibility))
-                                    setupRecyclerview()
+                                    updateFilteredList()
                                 }
                                 .addOnFailureListener { e ->
                                     Log.e("Firestore", "Error fetching questions for quiz: $quizId", e)
@@ -114,30 +158,12 @@ class QuizMainActivity : AppCompatActivity() {
             }
     }
 
-
-
-
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun setupRecyclerview() {
-        if (!::adapter.isInitialized) {
-            adapter = QuizListAdapter(quizModelList)
-            binding.recyclerView.layoutManager = LinearLayoutManager(this)
-            binding.recyclerView.adapter = adapter
-        } else {
-            adapter.notifyDataSetChanged()
-        }
+    /**
+     * Updates the filtered list to show all quizzes initially.
+     */
+    private fun updateFilteredList() {
+        filteredQuizList.clear()
+        filteredQuizList.addAll(quizModelList)
+        adapter.notifyDataSetChanged()
     }
 }
-
-
-
-
-/**
- * REFERENCES ::
- *
- * https://firebase.google.com/docs/database/android/read-and-write
- * https://www.youtube.com/watch?v=EMM_3Wld2jU
- * https://www.geeksforgeeks.org/how-to-retrieve-data-from-the-firebase-realtime-database-in-android/
- */
