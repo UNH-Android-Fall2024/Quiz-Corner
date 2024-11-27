@@ -110,11 +110,14 @@ class SignupActivity : AppCompatActivity() {
 
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
+            // Attempt to retrieve the GoogleSignInAccount from the completed task
             val account = completedTask.getResult(Exception::class.java)
+            // If the account is not null, proceed to authenticate with Firebase
             if (account != null) {
                 firebaseAuthWithGoogle(account)
             }
         } catch (e: Exception) {
+            // Catch any exception that occurs and show a toast message with the error details
             Toast.makeText(this, "Google sign-in failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
