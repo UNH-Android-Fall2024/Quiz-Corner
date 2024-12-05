@@ -12,7 +12,8 @@ data class QuizModel(
     val time: String,
     val questionList: List<QuestionModel>,
     val visibility: String = "public",  // "public" or "private"
-    val creator: String = ""       // Email of the quiz creator
+    val creator: String = ""  ,     // Email of the quiz creator
+    val averageRating: Double = 5.0 // Default rating is 5.0
 ){
     constructor(): this("","","","", emptyList())
 }

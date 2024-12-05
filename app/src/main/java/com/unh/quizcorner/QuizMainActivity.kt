@@ -42,7 +42,8 @@ class QuizMainActivity : AppCompatActivity() {
      * Configures the SearchView to filter quizzes based on user input.
      */
     private fun setupSearchView() {
-        binding.searchBar.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
+        binding.searchBar.setOnQueryTextListener(object :
+            android.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 filterQuizzes(query)
                 return true
@@ -157,6 +158,8 @@ class QuizMainActivity : AppCompatActivity() {
                 Log.e("Firestore", "Error fetching created quizzes", e)
             }
     }
+
+
 
     /**
      * Updates the filtered list to show all quizzes initially.
