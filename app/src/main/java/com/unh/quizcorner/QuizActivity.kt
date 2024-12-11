@@ -48,7 +48,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         binding = ActivityQuizBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Retrieve the quizId passed from the adapter
+        /**
+         * Retrieving the quizId passed from the adapter
+         */
         quizId = intent.getStringExtra("quizId") ?: ""
 
         // Check if the quizId is null or empty
@@ -101,14 +103,13 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             return
         }
 
-        selectedAnswer = "" // Reset the selected answer for the new question
+        selectedAnswer = ""
 
         binding.apply {
             questionIndicator.text = "Question ${currentQuestionIndex+1}/ ${questionModelList.size}"
 
             questionProgressIndicator.progress =
                 (currentQuestionIndex.toFloat()/ questionModelList.size.toFloat() * 100).toInt()
-
             // Question
             questionTextview.text = questionModelList[currentQuestionIndex].question
 
@@ -124,7 +125,10 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
     override fun onClick(view: View?) {
 
-        // changing the color of buttons when clicked .
+        /**
+         *  changing the color of buttons when clicked .
+          */
+
         binding.apply {
             btn0.setBackgroundColor(getColor(R.color.lightBlue))
             btn1.setBackgroundColor(getColor(R.color.lightBlue))
@@ -135,8 +139,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
 
         val clickedBtn = view as Button
         if(clickedBtn.id==R.id.next_btn){
-            // Next button is clicked
-
+            /**
+             * NExt button is clicked
+             */
             if(selectedAnswer.isEmpty()){
                 Toast.makeText(applicationContext, "Please Select an answer to proceed !", Toast.LENGTH_SHORT).show()
                 return;
@@ -150,7 +155,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             loadQuestions()
 
         }else {
-            // Options are clicked
+            /**
+             *Options are clicked
+             */
             clickedBtn.setBackgroundColor(getColor(R.color.lightGreen))
 
             selectedAnswer = clickedBtn.text.toString()
@@ -189,7 +196,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
                 finish()
             }
 
-            // When the user changes the rating, submit it to Firebase
+            /**
+             * CCalculating the changes when user clicks on Rating.
+             */
             ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
                 submitRatingToFirebase(rating)
             }
@@ -203,6 +212,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         }
     }
 
+    /**
+     * Notification section ::
+     */
     private fun sendQuizCompletionNotification(score: Int, totalQuestions: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
@@ -251,6 +263,9 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
         }
     }
 
+    /**
+     * Submitting the rating to firebase.
+     */
     private fun submitRatingToFirebase(userRating: Float) {
         val firestore = FirebaseFirestore.getInstance()
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -267,13 +282,15 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
             return
         }
 
-        // Create the rating data
         val ratingData = hashMapOf(
             "userId" to userId,
             "rating" to userRating
         )
 
-        // Add the rating to the ratings subcollection
+        /**
+         *   Adding the rating to the ratings subcollection
+          */
+
         firestore.collection("quizzes")
             .document(quizId)
             .collection("ratings")
@@ -296,4 +313,8 @@ class QuizActivity : AppCompatActivity(),View.OnClickListener {
  * https://www.geeksforgeeks.org/progressbar-in-kotlin/
  * https://stackoverflow.com/questions/10398114/how-to-get-value-of-a-pressed-button
  * https://www.geeksforgeeks.org/android-recyclerview/
+ * https://www.geeksforgeeks.org/ratingbar-in-kotlin/
+ * https://stackoverflow.com/questions/57511196/kotlin-how-to-save-values-from-ratingbar
+ * https://www.geeksforgeeks.org/notifications-in-kotlin/
+ * https://medium.com/@anandmali/creating-a-basic-android-notification-5e5ee1614aae
  */
