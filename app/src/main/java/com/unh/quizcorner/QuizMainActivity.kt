@@ -1,5 +1,10 @@
 package com.unh.quizcorner
 
+/**
+ * This is the Main page of the Quizzes . All the quizzes will be dooisplayed here .
+ * User can search a quiz and attempt a quiz here .
+ * This kt file has the function to pull the quizzes from firebase ( both public and private)
+ */
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log

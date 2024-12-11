@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
             when(it.itemId){
 
+                // Navigating between Home/ Profile pages
                 R.id.home -> replaceFragment(HomeFragment())
                 R.id.profile -> replaceFragment(ProfileFragment())
 

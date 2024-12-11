@@ -1,5 +1,9 @@
 package com.unh.quizcorner
 
+/**
+ * The QuizListAdapter demonstrates the adapter setup for recycler view
+ * this adapter is similar to the QuizListAdapter.
+ */
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

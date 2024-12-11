@@ -1,6 +1,5 @@
 package com.unh.quizcorner
 
-
 /**
  * The QuizActivity file demonstrates Quizzes being displayed and results being processed ,
  * after user submits a quiz .

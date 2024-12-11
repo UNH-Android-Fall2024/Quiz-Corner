@@ -1,5 +1,9 @@
 package com.unh.quizcorner
 
+/**
+ * This Activity file as name indicates , demonstrates the Add Quiz Functinality.
+ * User can add a quiz here .
+ */
 import android.R.id
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.unh.quizcorner.databinding.ActivityAddquizBinding
-
 
 class AddquizActivity : AppCompatActivity() {
 
@@ -27,7 +30,7 @@ class AddquizActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        // Setup RecyclerView
+        // Setting up RecyclerView
         val recyclerView: RecyclerView = binding.questionsRecyclerView
         questionsAdapter = UserQuestionsAdapter(questionsList)
         recyclerView.adapter = questionsAdapter
@@ -56,10 +59,9 @@ class AddquizActivity : AppCompatActivity() {
             optionC.isNotEmpty() && optionD.isNotEmpty() && correctAnswer.isNotEmpty()) {
 
             val newQuestion = QuestionModel(questionText, listOf(optionA, optionB, optionC, optionD), correctAnswer)
-            questionsList.add(newQuestion) // Add to questions list
-            questionsAdapter.notifyItemInserted(questionsList.size - 1) // Notify adapter
-
-            // Clear input fields
+            questionsList.add(newQuestion)
+            questionsAdapter.notifyItemInserted(questionsList.size - 1) // Notifying adapter
+            // Clearing input fields after submission.
             binding.questionText.text.clear()
             binding.optionA.text.clear()
             binding.optionB.text.clear()
@@ -71,12 +73,13 @@ class AddquizActivity : AppCompatActivity() {
         }
     }
 
+    // Below function relates to Creating the Quiz functionality
     private fun createQuiz() {
         val quizId = binding.quizId.text.toString()
         val quizTitle = binding.quizTitle.text.toString()
         val quizSubtitle = binding.quizSubtitle.text.toString()
         val quizTime = binding.quizTime.text.toString().toLongOrNull()
-        val isPublic = binding.privacyToggle.isChecked // Check the toggle state
+        val isPublic = binding.privacyToggle.isChecked // Checking the toggle state
 
         if (quizId.isNotEmpty() && quizTitle.isNotEmpty() && quizSubtitle.isNotEmpty() &&
             quizTime != null && questionsList.isNotEmpty()) {
@@ -86,7 +89,7 @@ class AddquizActivity : AppCompatActivity() {
                 "title" to quizTitle,
                 "subtitle" to quizSubtitle,
                 "time" to quizTime.toString(),
-                "creator" to firebaseAuth.currentUser?.email, // Add the creator's email
+                "creator" to firebaseAuth.currentUser?.email, // Adding the creator's email (to pullup private quizzes)
                 "visibility" to if (isPublic) "public" else "private" // Set visibility based on toggle
             )
 
@@ -94,20 +97,19 @@ class AddquizActivity : AppCompatActivity() {
             val currentUser = firebaseAuth.currentUser
             val userEmail = currentUser?.email ?: return
 
-            // Save the quiz to the main "quizzes" collection
+            // Saving the quiz to the main "quizzes" collection
             val quizRef = firestore.collection("quizzes").document(quizId)
 
-            // Add quiz data to Firestore
+            // Adding quiz data to Firestore database.
             quizRef.set(newQuiz)
                 .addOnSuccessListener {
-                    // Save quiz to the user's createdQuizzes sub-collection
                     firestore.collection("users")
                         .document(userEmail) // Document for the current user
                         .collection("createdQuizzes")
-                        .document(quizId) // Use quizId as document ID
-                        .set(newQuiz) // Save the quiz to the user's createdQuizzes collection
+                        .document(quizId) // Using quizId as document ID
+                        .set(newQuiz) // Saving the quiz to the user's createdQuizzes collection
 
-                    // Add questions to the sub-collection
+                    // Adding questions to the sub-collection (this will be displayed at the bottom)
                     for ((index, question) in questionsList.withIndex()) {
                         val questionData = mapOf(
                             "question" to question.question,
@@ -131,10 +133,4 @@ class AddquizActivity : AppCompatActivity() {
             Toast.makeText(this, "Please fill all fields and add questions", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
-
-
-
 }
