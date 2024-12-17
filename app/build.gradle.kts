@@ -42,7 +42,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -56,12 +55,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
     val emoji2_version = "1.5.0"
-
-    implementation("androidx.emoji2:emoji2:$emoji2_version")
-    implementation("androidx.emoji2:emoji2-views:$emoji2_version")
-    implementation("androidx.emoji2:emoji2-views-helper:$emoji2_version")
-    implementation ("com.google.android.gms:play-services-auth:20.6.0")
-    implementation ("com.google.firebase:firebase-auth:22.1.2")
+    implementation(libs.androidx.emoji2)
+    implementation(libs.androidx.emoji2.views)
+    implementation(libs.androidx.emoji2.views.helper)
+    implementation ("com.google.android.gms:play-services-auth:21.3.0")
+    implementation (libs.firebase.auth.v2212)
 }
